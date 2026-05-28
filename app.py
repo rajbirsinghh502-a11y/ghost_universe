@@ -9,337 +9,286 @@ import asyncio
 app = FastAPI()
 
 # ========================================================
-# 1. THE UNIVERSAL STATE MATRIX
+# 1. THE COSMIC TIMELINE STATE MATRIX
 # ========================================================
 universe_state = {
+    "cosmic_years": 0,           # Simulation Age Clock
+    "current_era": "BIG BANG",    # The current Evolutionary Epoch
     "time_scale": 1.0,
-    "temperature": 25.0,
-    "disaster": "None",
-    "virus_active": False,
+    "temperature": 1000.0,       # Starts super hot like the actual Big Bang!
+    "disaster": "Cosmic Inflation",
     "total_mutations": 0,
     "extinct_count": 0,
-    "current_population": 150,  # Scaled up tracking
-    "internet_sync_status": "Ready (2026 Baseline)",
-    "latest_discovery": "None",
-    "status_message": "⚡ SYSTEM LOG: Scaled Universe Matrix Engine Active."
+    "current_population": 150,
+    "latest_invention": "None",
+    "status_message": "🌌 COSMIC GENESIS: The Big Bang has initiated. Star dust assembling."
 }
 
 # ========================================================
-# 2. CONSCIOUS LIVING AGENT (NEURAL LEARNING BRAIN)
+# 2. EVOLVING CONSCIOUS NODE (SPECIES GENETICS)
 # ========================================================
-class ConsciousAgent:
-    def __init__(self, agent_id, x, y, gen=1):
-        self.id = agent_id
+class CosmicNode:
+    def __init__(self, node_id, x, y, species_type="Star Dust", gen=1):
+        self.id = node_id
         self.x = x
         self.y = y
-        self.vx = random.uniform(-1.8, 1.8)
-        self.vy = random.uniform(-1.8, 1.8)
+        self.vx = random.uniform(-2.0, 2.0)
+        self.vy = random.uniform(-2.0, 2.0)
         
-        # Biological Homeostasis
+        # Biology Matrix
         self.health = 100.0
         self.energy = 100.0
-        self.age = 0.0
+        self.generation = gen
+        self.species_type = species_type # "Star Dust", "Protozoa", "Dinosaur", "Human"
         self.is_dead = False
         
-        # Neural Weights
+        # Neural Adaptability Weights
         self.brain_weights = {
-            "food_tendency": random.uniform(-1.0, 1.0),
-            "hazard_avoidance": random.uniform(-1.0, 1.0),
-            "energy_conservation": random.uniform(0.1, 1.0)
+            "thermal_resistance": random.uniform(-1.0, 1.0),
+            "reproduction_drive": random.uniform(0.1, 1.0)
         }
-        self.generation = gen
 
-    def process_neuro_inputs(self, closest_food_dist, current_temp, pain):
-        decision_x = (closest_food_dist * self.brain_weights["food_tendency"]) - (pain * self.brain_weights["hazard_avoidance"])
-        decision_y = (current_temp * 0.01 * self.brain_weights["energy_conservation"])
+    def update_physics(self, dt, temp):
+        # Friction based on environmental cooling
+        friction = 0.99 if temp > 500 else 1.0
+        self.x += self.vx * dt * friction
+        self.y += self.vy * dt * friction
         
-        self.vx += math.tanh(decision_x) * 0.25
-        self.vy += math.tanh(decision_y) * 0.25
+        # Boundary bounces
+        if self.x < 0 or self.x > 800: self.vx *= -1
+        if self.y < 0 or self.y > 450: self.vy *= -1
 
-# Initial Population Scaled Up from 35 to 150!
-population = [ConsciousAgent(i, random.uniform(30, 770), random.uniform(30, 420)) for i in range(150)]
+# Initial Genesis Population (Star Dust Particles)
+population = [CosmicNode(i, random.uniform(300, 500), random.uniform(150, 300), "Star Dust") for i in range(150)]
 
 class CommandInput(BaseModel):
     text: str
 
 # ========================================================
-# 3. INTERNET LIVE-SYNC PIPELINE
+# 3. AUTOMATED TIME-WARP ERA MANAGER (THE BRAHMAN LOOP)
 # ========================================================
-async def fetch_real_world_inventions():
+def manage_cosmic_evolution():
     global population
-    universe_state["internet_sync_status"] = "Syncing..."
-    await asyncio.sleep(1)
+    years = universe_state["cosmic_years"]
+    temp = universe_state["temperature"]
     
-    discoveries = [
-        "Quantum Computing Error Correction Breakthrough",
-        "Advanced Fusion Reactor Plasma Stabilization",
-        "Graphene-based Neural Interface Optimization",
-        "Next-Gen Bio-Engineered Super-Foods"
-    ]
-    
-    selected = random.choice(discoveries)
-    universe_state["latest_discovery"] = selected
-    universe_state["internet_sync_status"] = "Synced Successfully"
-    universe_state["status_message"] = f"🌐 INTERNET SYNC: Injected '{selected}' data into agent clusters!"
-    
-    for agent in population:
-        agent.brain_weights["energy_conservation"] += 0.25
-        agent.health = min(agent.health + 30, 100.0)
-
-# ========================================================
-# 4. NATURAL LANGUAGE COMMAND PARSER (WITH SPAWN CONTROL)
-# ========================================================
-def parse_god_command(command: str, background_tasks: BackgroundTasks):
-    global population
-    cmd = command.lower()
-    
-    # NEW FEATURE: Dynamic Spawn / Mass Injection Logic
-    if "spawn" in cmd or "inject" in cmd or "add" in cmd:
-        spawn_match = re.search(r'\d+', cmd)
-        count = int(spawn_match.group()) if spawn_match else 50
-        # Capping max agents at 400 to maintain smooth frame rates on cloud tier
-        if len(population) + count > 450:
-            count = 450 - len(population)
-            if count <= 0: return "⚠️ MATRIX LIMIT: Server allocation grid full! Cannot spawn more agents right now."
+    # ERA 0 -> ERA 1: COOLING DOWN & EARTH FORMATION
+    if universe_state["current_era"] == "BIG BANG" and years > 100:
+        universe_state["current_era"] = "PRIMORDIAL EARTH"
+        universe_state["temperature"] = 45.0 # Cooling down
+        universe_state["disaster"] = "Ocean Formation"
+        universe_state["status_message"] = "🌍 ERA SHIFT: Earth is cooling down. Oceans are forming. Single-cell life emerging!"
+        for node in population:
+            node.species_type = "Protozoa"
             
-        start_id = random.randint(10000, 99999)
-        for i in range(count):
-            population.append(ConsciousAgent(start_id + i, random.uniform(50, 750), random.uniform(50, 400)))
-        universe_state["current_population"] = len(population)
-        return f"🧬 GENESIS BURST: Injected {count} new conscious entities into the coordinate matrix!"
-
-    if time_match := re.search(r'(\d+)\s*x', cmd):
-        scale = float(time_match.group(1))
-        universe_state["time_scale"] = min(scale, 50.0) # Safe cap for dense populations
-        return f"⚡ Time Warp speed accelerated to {universe_state['time_scale']}x!"
-        
-    if temp_match := re.search(r'(-?\d+)\s*(degree|celsius|temp|temperature)', cmd):
-        temp = float(temp_match.group(1))
-        universe_state["temperature"] = temp
-        return f"🌡️ Global Grid Temperature shifted to {temp}°C."
-
-    if "ice age" in cmd or "freeze" in cmd:
-        universe_state["temperature"] = -30.0
-        universe_state["disaster"] = "Ice Age"
-        return "❄️ CRITICAL: Ice Age triggered."
-        
-    if "solar flare" in cmd or "burn" in cmd:
-        universe_state["temperature"] = 65.0
-        universe_state["disaster"] = "Solar Flare"
-        return "🔥 CRITICAL: Solar Flare radiation sweeping."
-        
-    if "virus" in cmd or "pandemic" in cmd:
-        universe_state["virus_active"] = True
-        return "🦠 MUTATION: Pathogenic biological virus code active."
-
-    if "sync" in cmd or "fetch" in cmd or "knowledge" in cmd:
-        background_tasks.add_task(fetch_real_world_inventions)
-        return "🌐 PIPELINE: Fetching external internet nodes..."
-
-    if "reset" in cmd or "normal" in cmd:
-        universe_state["time_scale"] = 1.0
-        universe_state["temperature"] = 25.0
+    # ERA 1 -> ERA 2: AGE OF DINOSAURS
+    elif universe_state["current_era"] == "PRIMORDIAL EARTH" and years > 300:
+        universe_state["current_era"] = "AGE OF DINOSAURS"
+        universe_state["temperature"] = 32.0
         universe_state["disaster"] = "None"
-        universe_state["virus_active"] = False
-        return "🔄 Reset executed. Baseline restored."
-
-    return "🤖 Console: Command processed."
+        universe_state["status_message"] = "🦖 ERA SHIFT: The Carboniferous burst! Giant Dinosaurs rule the digital plane."
+        for node in population:
+            node.species_type = "Dinosaur"
+            
+    # ERA 2 -> ERA 3: THE ASTEROID EXTINCTION EVENT
+    elif universe_state["current_era"] == "AGE OF DINOSAURS" and years > 500:
+        universe_state["current_era"] = "ASTEROID IMPACT"
+        universe_state["temperature"] = 180.0 # Extreme Heat Shock
+        universe_state["disaster"] = "Chicxulub Asteroid Crash"
+        universe_state["status_message"] = "☄️ CRITICAL EVENT: A massive Asteroid has hit the grid! Dinosaurs are going extinct!"
+        # Kill 85% of the population instantly
+        survivors = [n for n in population if random.random() < 0.15]
+        population = survivors
+        
+    # ERA 3 -> ERA 4: HUMAN CIVILIZATION & 2026 RE-INVENTION
+    elif universe_state["current_era"] == "ASTEROID IMPACT" and years > 580:
+        universe_state["current_era"] = "ANTHROPOCENE (HUMANS)"
+        universe_state["temperature"] = 22.0 # Perfect Living Conditions
+        universe_state["disaster"] = "None"
+        universe_state["status_message"] = "🧠 ERA SHIFT: Humans have evolved. Constructing internet pipelines and AI infrastructure..."
+        
+        # Inject modern tech baseline
+        universe_state["latest_invention"] = "Silicon Microchip & AI"
+        for node in population:
+            node.species_type = "Human"
 
 # ========================================================
-# 5. API ROUTING ENDPOINTS
+# 4. API ENGINE CHANNELS
 # ========================================================
-@app.post("/api/command")
-def post_command(data: CommandInput, background_tasks: BackgroundTasks):
-    response_text = parse_god_command(data.text, background_tasks)
-    universe_state["status_message"] = response_text
-    return universe_state
-
 @app.get("/api/state")
 def get_state():
     global population
-    dt = 0.08 * universe_state["time_scale"]
+    dt = 0.1 * universe_state["time_scale"]
     
-    active_agents = []
-    for agent in population:
-        if agent.is_dead:
-            continue
+    # Tick the cosmic clock
+    universe_state["cosmic_years"] += 1 * universe_state["time_scale"]
+    
+    # Check if it's time to shift history eras
+    manage_cosmic_evolution()
+    
+    active_nodes = []
+    temp = universe_state["temperature"]
+    
+    for node in population:
+        if node.is_dead: continue
+        
+        # Physics Step
+        node.update_physics(dt, temp)
+        
+        # Metabolic Entropy based on current Eras
+        if universe_state["current_era"] == "BIG BANG":
+            node.energy -= 0.01 * dt # Pure kinetic energy
+        elif node.species_type == "Dinosaur":
+            node.energy -= 0.08 * dt # Big bodies consume heavy energy
+        else:
+            node.energy -= 0.04 * dt
             
-        agent.age += 0.003 * dt
-        agent.energy -= 0.03 * dt
-        
-        pain = 1.0 if (agent.energy < 20.0 or universe_state["temperature"] > 50.0 or universe_state["temperature"] < -5.0) else 0.0
-        if pain > 0:
-            agent.health -= 0.12 * dt
-            
-        agent.process_neuro_inputs(random.uniform(0, 100), universe_state["temperature"], pain)
-        
-        agent.x += agent.vx * dt
-        agent.y += agent.vy * dt
-        
-        if agent.x < 0 or agent.x > 800: agent.vx *= -1
-        if agent.y < 0 or agent.y > 450: agent.vy *= -1
-        
-        if agent.health <= 0 or agent.age > 100:
-            agent.is_dead = True
+        # Death criteria
+        if node.energy <= 0:
+            node.is_dead = True
             universe_state["extinct_count"] += 1
         else:
-            active_agents.append(agent)
+            active_nodes.append(node)
             
-    # Auto-Genesis Safe Trigger
-    if len(active_agents) < 10:
-        active_agents += [ConsciousAgent(random.randint(10000, 99999), random.uniform(100, 700), random.uniform(100, 350)) for _ in range(50)]
-        universe_state["status_message"] = "🧬 SYSTEM RESET: Low density detected. Auto-Genesis re-seeded 50 nodes."
-
-    # Genetic Reproduction Loop
-    elif len(active_agents) > 0 and len(active_agents) < 180:
-        if random.random() < 0.4:  # Balanced birth rate
-            parent = random.choice(active_agents)
-            child = ConsciousAgent(random.randint(1000, 9999), parent.x + random.uniform(-12, 12), parent.y + random.uniform(-12, 12), parent.generation + 1)
-            child.brain_weights["food_tendency"] = parent.brain_weights["food_tendency"] + random.uniform(-0.08, 0.08)
-            child.brain_weights["hazard_avoidance"] = parent.brain_weights["hazard_avoidance"] + random.uniform(-0.08, 0.08)
-            active_agents.append(child)
+    # Reproduction / Speciation Loop
+    if len(active_nodes) > 0 and len(active_nodes) < 250:
+        if random.random() < 0.3:
+            parent = random.choice(active_nodes)
+            child = CosmicNode(random.randint(10000, 99999), parent.x + random.uniform(-10, 10), parent.y + random.uniform(-10, 10), parent.species_type, parent.generation + 1)
+            active_nodes.append(child)
             universe_state["total_mutations"] += 1
+            
+    # If complete extinction happens, prompt a sub-genesis trigger
+    if len(active_nodes) == 0:
+        active_nodes = [CosmicNode(random.randint(1, 1000), random.uniform(100, 700), random.uniform(100, 350), "Mammal Base") for _ in range(40)]
+        universe_state["current_era"] = "MAMMALIAN REBOUND"
         
-    population = active_agents
+    population = active_nodes
     universe_state["current_population"] = len(population)
     
     return {
         "meta": universe_state,
-        "agents": [{"x": a.x, "y": a.y, "gen": a.generation, "health": a.health} for a in population]
+        "agents": [{"x": n.x, "y": n.y, "gen": n.generation, "type": n.species_type} for n in population]
     }
 
+@app.post("/api/command")
+def post_command(data: CommandInput):
+    cmd = data.text.lower()
+    if "speed" in cmd or "x" in cmd:
+        universe_state["time_scale"] = 5.0 # Speed up cosmic time warp
+        return {"status_message": "⚡ COSMIC WARP: Time acceleration active."}
+    if "reset" in cmd:
+        universe_state["cosmic_years"] = 0
+        universe_state["current_era"] = "BIG BANG"
+        universe_state["temperature"] = 1000.0
+        return {"status_message": "🔄 RAGNAROK: Universe recycled back to the primeval point."}
+    return {"status_message": "Console synchronized."}
+
+# ========================================================
+# 5. HIGH-DYNAMICS VISUALIZER DASHBOARD
+# ========================================================
 @app.get("/")
 def get_dashboard():
     html_content = """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Ghost OS: Ultimate Master Universe</title>
+        <title>Ghost Cosmic Simulator v5.0</title>
         <style>
-            body { background: #040406; color: #fff; font-family: 'Courier New', monospace; padding: 20px; display: flex; gap: 20px; margin: 0; height: 95vh; }
+            body { background: #020204; color: #fff; font-family: 'Courier New', monospace; padding: 20px; display: flex; gap: 20px; margin: 0; }
             .left-panel { flex: 3; display: flex; flex-direction: column; }
-            .right-panel { flex: 1.3; background: #09090f; border: 1px solid #161626; padding: 15px; display: flex; flex-direction: column; border-radius: 8px; }
-            canvas { background: #000; border: 2px solid #11111a; width: 100%; height: 450px; border-radius: 6px; }
-            #console-log { flex: 1; background: #010102; border: 1px solid #161628; padding: 12px; overflow-y: auto; color: #39ff14; font-size: 13px; border-radius: 4px; margin-bottom: 10px; }
-            .metric { background: #0f0f1b; padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 4px solid #00f0ff; font-size: 13px; }
-            .sync-metric { border-left: 4px solid #ffaa00; font-weight: bold; }
-            .pop-metric { border-left: 4px solid #a100ff; font-weight: bold; }
-            input { background: #11111f; color: #fff; border: 1px solid #25253d; padding: 12px; font-family: monospace; border-radius: 4px; font-size: 14px; outline: none; }
+            .right-panel { flex: 1.2; background: #07070c; border: 1px solid #141424; padding: 15px; border-radius: 8px; }
+            canvas { background: #000; border: 2px solid #111; width: 100%; height: 450px; border-radius: 6px; }
+            .metric { background: #0d0d18; padding: 10px; margin: 5px 0; border-radius: 4px; border-left: 4px solid #00f0ff; font-size: 13px; }
+            .era-tag { font-size: 18px; color: #ff0055; font-weight: bold; text-align: center; border: 1px dashed #ff0055; padding: 10px; margin-bottom: 10px; }
         </style>
     </head>
     <body>
         <div class="left-panel">
-            <h2>🌌 GHOST OMNIVERSE CORE ENGINE (v4.0 High-Capacity)</h2>
-            <canvas id="universeCanvas" width="800" height="450"></canvas>
-            <div id="status-bar" style="color: #00f0ff; margin-top: 10px; font-weight: bold;">Status: Synced.</div>
+            <h2>🌌 GHOST OMNIVERSE: THE COSMIC TIMELINE ENGINE</h2>
+            <canvas id="cosmicCanvas" width="800" height="450"></canvas>
+            <div id="status-bar" style="color: #39ff14; margin-top: 10px; font-weight: bold;">Loading Big Bang...</div>
         </div>
         
         <div class="right-panel">
-            <h3>🎛️ AI OMNIPOTENT CONSOLE</h3>
-            <div class="metric pop-metric" id="m-pop">Live Universe Population: 150</div>
-            <div class="metric" id="m-warp">Time Warp: 1.0x</div>
-            <div class="metric" id="m-temp">Grid Temp: 25°C</div>
-            <div class="metric" id="m-disaster">Crisis Phase: None</div>
-            <div class="metric" id="m-mutations">Total Brain Mutations: 0</div>
-            <div class="metric" id="m-extinct">Extinct Entities: 0</div>
-            <div class="metric sync-metric" id="m-sync">Sync: Ready (2026 Baseline)</div>
-            <div class="metric" id="m-discovery" style="font-size:11px; color:#aaa;">Latest Tech: None</div>
-            <hr style="border: 1px solid #161626; width:100%;">
-            <h4>💬 ENGINE CHAT BOX:</h4>
-            <div id="console-log">High-Capacity Engine Active. Use 'spawn 100' to inject mass...</div>
-            <input type="text" id="cmdInput" placeholder="Type command (e.g., spawn 100, 5x speed)..." onkeydown="if(event.key==='Enter') executeCommand()">
+            <div class="era-tag" id="m-era">ERA: BIG BANG</div>
+            <div class="metric" id="m-years">Cosmic Timeline Counter: 0</div>
+            <div class="metric" id="m-pop">Total Active Species: 150</div>
+            <div class="metric" id="m-temp">Ambient Temp: 1000°C</div>
+            <div class="metric" id="m-disaster">Current Phase Crisis: Inflation</div>
+            <div class="metric" id="m-invention" style="border-left-color: #ffaa00;">Latest Invention: None</div>
+            <hr style="border-color: #141424;">
+            <p style="font-size: 11px; color: #668;">Leave this window open to let the timeline organically progress across millions of digital cycles.</p>
         </div>
 
         <script>
-            const canvas = document.getElementById('universeCanvas');
+            const canvas = document.getElementById('cosmicCanvas');
             const ctx = canvas.getContext('2d');
-            let agents = [];
-            let currentTemp = 25.0;
+            let nodes = [];
 
-            async function syncStateLoop() {
+            async function refreshCosmosLoop() {
                 try {
                     const res = await fetch('/api/state');
                     const data = await res.json();
                     
-                    agents = data.agents;
-                    currentTemp = data.meta.temperature;
+                    nodes = data.agents;
                     
-                    document.getElementById('m-pop').innerText = `Live Universe Population: ${data.meta.current_population}`;
-                    document.getElementById('m-warp').innerText = `Time Warp: ${data.meta.time_scale}x`;
-                    document.getElementById('m-temp').innerText = `Grid Temp: ${data.meta.temperature}°C`;
-                    document.getElementById('m-disaster').innerText = `Crisis Phase: ${data.meta.disaster}`;
-                    document.getElementById('m-mutations').innerText = `Total Brain Mutations: ${data.meta.total_mutations}`;
-                    document.getElementById('m-extinct').innerText = `Extinct Entities: ${data.meta.extinct_count}`;
-                    document.getElementById('m-sync').innerText = `Sync: ${data.meta.internet_sync_status}`;
-                    document.getElementById('m-discovery').innerText = `Latest Tech: ${data.meta.latest_discovery}`;
+                    // Live UI Bindings
+                    document.getElementById('m-era').innerText = `ERA: ${data.meta.current_era}`;
+                    document.getElementById('m-years').innerText = `Cosmic Cycles: ${Math.floor(data.meta.cosmic_years)}`;
+                    document.getElementById('m-pop').innerText = `Total Active Species: ${data.meta.current_population}`;
+                    document.getElementById('m-temp').innerText = `Ambient Temp: ${data.meta.temperature}°C`;
+                    document.getElementById('m-disaster').innerText = `Current Phase Crisis: ${data.meta.disaster}`;
+                    document.getElementById('m-invention').innerText = `Latest Invention: ${data.meta.latest_invention}`;
                     document.getElementById('status-bar').innerText = data.meta.status_message;
-                } catch(e) { console.log("Packet drop handled."); }
+                } catch(e) { console.log("Frame drop."); }
                 
-                drawEngine();
-                setTimeout(syncStateLoop, 60);
+                renderCosmos();
+                setTimeout(refreshCosmosLoop, 70);
             }
 
-            function drawEngine() {
+            function renderCosmos() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                if(currentTemp < 0) {
-                    ctx.fillStyle = "rgba(0, 140, 255, 0.08)";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                } else if(currentTemp > 50) {
-                    ctx.fillStyle = "rgba(255, 40, 0, 0.08)";
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                }
-
-                agents.forEach(a => {
+                nodes.forEach(n => {
                     ctx.beginPath();
-                    ctx.arc(a.x, a.y, Math.min(3 + (a.gen * 0.25), 10), 0, Math.PI * 2);
                     
-                    if(a.gen > 1) {
-                        ctx.fillStyle = `rgb(0, ${Math.min(140 + (a.gen*12), 255)}, 255)`;
+                    // VISUAL RENDER STYLE PER SPECIES TYPE
+                    if (n.type === "Star Dust") {
+                        ctx.arc(n.x, n.y, 2, 0, Math.PI * 2);
+                        ctx.fillStyle = "#ffffff"; // Hot white dust
+                    } else if (n.type === "Protozoa") {
+                        ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = "#00ffaa"; // Organic Green
+                    } else if (n.type === "Dinosaur") {
+                        ctx.arc(n.x, n.y, 8, 0, Math.PI * 2); // Big Nodes!
+                        ctx.fillStyle = "#ffaa00"; // Reptilian Gold
+                    } else if (n.type === "Human") {
+                        ctx.arc(n.x, n.y, 5, 0, Math.PI * 2);
+                        ctx.fillStyle = "#00f0ff"; // Advanced Cyan
                     } else {
-                        ctx.fillStyle = "#ff0052";
+                        ctx.arc(n.x, n.y, 4, 0, Math.PI * 2);
+                        ctx.fillStyle = "#ff0055";
                     }
                     ctx.fill();
                     
-                    // Optimization: Web lines are rendered only for dense local pockets to keep FPS high
-                    if (agents.length < 250) {
-                        agents.forEach(a2 => {
-                            let dist = Math.hypot(a2.x - a.x, a2.y - a.y);
-                            if(dist > 0 && dist < 32) {
-                                ctx.beginPath();
-                                ctx.moveTo(a.x, a.y);
-                                ctx.lineTo(a2.x, a2.y);
-                                ctx.strokeStyle = "rgba(57, 255, 20, 0.08)";
-                                ctx.stroke();
-                            }
-                        });
-                    }
+                    // Constellation mapping connections
+                    nodes.forEach(n2 => {
+                        let d = Math.hypot(n2.x - n.x, n2.y - n.y);
+                        if (d > 0 && d < 35) {
+                            ctx.beginPath();
+                            ctx.moveTo(n.x, n.y);
+                            ctx.lineTo(n2.x, n2.y);
+                            ctx.strokeStyle = n.type === "Human" ? "rgba(0, 240, 255, 0.15)" : "rgba(255, 255, 255, 0.05)";
+                            ctx.stroke();
+                        }
+                    });
                 });
             }
 
-            async function executeCommand() {
-                const input = document.getElementById('cmdInput');
-                const val = input.value.trim();
-                if(!val) return;
-                
-                input.value = '';
-                const log = document.getElementById('console-log');
-                log.innerHTML += `<div>> Execute: ${val}</div>`;
-                
-                const res = await fetch('/api/command', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({text: val})
-                });
-                const data = await res.json();
-                log.innerHTML += `<div style="color:#00ffff;">> Engine: ${data.status_message}</div>`;
-                log.scrollTop = log.scrollHeight;
-            }
-
-            syncStateLoop();
+            refreshCosmosLoop();
         </script>
     </body>
     </html>
     """
     return HTMLResponse(content=html_content)
-
